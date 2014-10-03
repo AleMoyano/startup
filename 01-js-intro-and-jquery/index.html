@@ -2,161 +2,78 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
-	<title>First Practice</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/style.css">
+	 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>First practice</title>
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 <body>
-	<header>
-		
+
+	<header >
+		HEADER
 	</header>
-	
+	<section>
+		<div class="hidden">
+			Hello World
+		</div>
+		
+		<br>
+		<textarea class="alias" rows="1" cols="40" placeholder="Are you looking for an specific hashtag?" ></textarea>
+		<br>
+		<button type="button" onclick="getResponse()" >
+			Get tweets!
+		</button>
+		<div class="response-text"></div>
+	</section>
 	<footer>
 		
 	</footer>
-	
-	
-	<!-- jQuery -->
-	<script src="http://code.jquery.com/jquery.js"></script>
-	<!-- Bootstrap JavaScript -->
-	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
 	<script>
-
-
-	// MOVIE REFACTORED AS MODULE //
-	/*var movieModule =(function() {
-
-	  function movie(){
-			this.attributes = {
-				title : '',
-				duration : '',
-				director : '',
-				actor : []
+		$( document ).ready(function() {
+  			$("section").fadeIn(2000, function() {
+  				
+  			});
 			}
+		);
+		// Gets tweets from url.
+		function getResponse(){
+			var hashtagText = $('textarea.alias').val();
+
+			if(hashtagText!=''){ // If user filled out the textarea with any hashtag:
+				$.ajax({
+					url: 'http://tweetproxy.ap01.aws.af.cm/search?q='+ hashtagText,
+					type: 'GET',
+					dataType: 'jsonp',
+					 
+					success: function(data){
+						//Succesfully received the top ten tweets.
+						$(".response-text").html("");
+						$.each(data.statuses, function(position, tweet){
+							$(".response-text").append(
+								"<img src='"+tweet.user.profile_image_url+"' alt=''> From: "+ tweet.user.name+
+								"  --- Created at:"+tweet.created_at+"<br>"+
+								tweet.text+"<br><br>");
+						})	
+					}
+				})
+				.done(function() {
+					console.log("success");
+				})
+				.fail(function() {
+					// Error while receiving the tweets.
+					$(".response-text").html("Error");
+					$(".response-text").css("color","red");
+					console.log("error");
+				})
+			}
+			else{
+				// User didn't ask for an specific hashtag.
+				alert("Please enter something to look for..");
+			}
+			
 		}
-
-		movie.prototype.set = function(attr , value){
-			this.attributes[attr] = value;
-		}
-
-		movie.prototype.get = function(attr){
-			console.log(this.attributes[attr]);
-			return this.attributes[attr];
-		}
-
-		movie.prototype.play = function (){
-			console.log ('Playing '+this.attributes.title+'...');
-		}
-
-		movie.prototype.stop = function(){
-			console.log ('Stopped '+this.attributes.title+'...');
-		}
-		return {
-			set: movie.set,
-			play: movie.play
-		};
-
-	}());
-
-	// downloadableMovie 
-	/*var downloadableMovie = (function(){
-
-    function downloadableMovie(){ 
-        movieModule.apply(this, arguments); // call the base objects constructor
-    }
-    
-    downloadableMovie.prototype = Object.create(movieModule.prototype); // inherit from the base object prototype
-    downloadableMovie.prototype.constructor = downloadableMovie;
-    
-    downloadableMovie.prototype.download = function(){
-        console.log("I'm downloading "+this.attributes.title);
-    };
-
-    return downloadableMovie;
-
-	})();*/
-	
-
-	var movieModule =(function() {
-
-  function movie(){
-    thisattributes = {
-      title : '',
-      duration : '',
-      director : '',
-      actor : []
-    }
-  }
-
-  return {
-    set : function(attr , value){
-      this.attributes[attr] = value;
-    },
-
-    get : function(attr){
-      console.log(this.attributes[attr]);
-      return this.attributes[attr];
-    },
-
-    play : function (){
-      console.log ('Playing '+this.attributes.title+'...');
-    }
-
-    stop : function(){
-      console.log ('Stopped '+this.attributes.title+'...');
-    }
-  
-  }
-    
-})();
-
-	function Actor(name){
-		this.name = name;
-	}
-
-	var social = function() {
-		this.share = function(friendName){
-			console.log('Sharing '+this.attributes.title+' with '+friendName);
-		};
-		this.like = function(){
-			console.log('I like '+this.attributes.title);
-		}
-	}; 
-
-	social.call(movieModule.prototype);
-
-	var terminator = new movieModule(),
-			titanic = new movieModule(),
-			shrek = new movieModule(),
-			actors = [],
-			aleMoyano = new Actor("Alexis Moyano"),
-			aleMoyano1 = new Actor("Alexis Moyano"), 
-			aleMoyano2 = new Actor("Alexis Moyano"), 
-			aleMoyano3 = new Actor("Alexis Moyano"); 
-	
-	
-	terminator.set('title' , 'Terminator');
-	titanic.set('title','Titanic');
-	shrek.set('title','Shrek II');
-
-	terminator.play();
-	terminator.stop();
-	titanic.play();
-	titanic.stop();
-	//shrek.download();
-	shrek.set('director','Cameron');
-	shrek.get('director');
-	//terminator.share('Alexis Moyano');
-
-	actors.push(aleMoyano);
-	actors.push(aleMoyano1);
-	actors.push(aleMoyano2);
-	actors.push(aleMoyano3);
-
-	terminator.set('actor',actors);
-		
 	</script>
 </body>
 </html>
